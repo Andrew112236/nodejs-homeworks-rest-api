@@ -3,7 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 
-const routerApi = require("./routes/api");
+const routerApi = require("./routes/api/index.js");
 
 const app = express();
 
@@ -11,9 +11,10 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
+const { corsOptions } = require("./cors.js");
 // cors
-app.use(cors());
-app.use(morgan("short"));
+app.use(cors(corsOptions));
+app.use(morgan("tiny"));
 app.use(express.json());
 
 app.use("/api", routerApi);
@@ -40,3 +41,5 @@ app.use((err, _, res, __) => {
 app.listen(PORT, function () {
   console.log(`Server running. Use our API on port: ${PORT}`);
 });
+
+module.exports = app;

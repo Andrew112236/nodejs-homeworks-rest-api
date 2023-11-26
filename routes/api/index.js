@@ -72,11 +72,18 @@ router.delete("/contacts/:contactId", async (req, res, next) => {
   }
 });
 
-// JOI
+// JOI package
+
+const addContactSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().required(),
+});
 
 router.post("/contacts", async (req, res, next) => {
-  const { name, email, phone } = req.body;
   try {
+    await addContactSchema.validateAsync(req.body);
+    const { name, email, phone } = req.body;
     const data = await addContact({ name, email, phone });
     res.status(201).json({
       status: "success",
@@ -92,6 +99,12 @@ router.post("/contacts", async (req, res, next) => {
   }
 });
 
+const schemaUpdate = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().required(),
+}).min(1);
+
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
   const { name, email, phone } = req.body;
@@ -103,6 +116,7 @@ router.put("/:contactId", async (req, res, next) => {
     });
   }
   try {
+    await schemaUpdate.validateAsync(req.body);
     const data = await updateContact(contactId, { name, email, phone });
     res.status(200).json({
       status: "success",

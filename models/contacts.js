@@ -6,7 +6,9 @@ const contactsPath = path.join(__dirname, "contacts.json");
 async function listContacts() {
   try {
     const data = await fs.readFile(contactsPath, "utf-8");
-    return JSON.parse(data);
+    const contacts = JSON.parse(data);
+
+    return contacts;
   } catch (error) {
     console.error("Eroare la citirea fisierului:", error);
     return [];
