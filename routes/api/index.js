@@ -55,7 +55,7 @@ router.get("/:contactId", async (req, res, next) => {
 
 router.delete("/contacts/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
-  //   console.log(contactId);
+
   try {
     await removeContact(contactId);
     res.status(200).json({
