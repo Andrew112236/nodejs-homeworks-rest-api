@@ -94,7 +94,7 @@ router.post("/contacts", async (req, res, next) => {
     res.status(400).json({
       status: "error",
       code: 400,
-      message: "lipseste numele",
+      message: "lipseste date",
     });
   }
 });

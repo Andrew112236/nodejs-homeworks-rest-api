@@ -62,7 +62,7 @@ async function addContact(body) {
     const data = await fs.readFile(contactsPath, "utf-8");
 
     const contacts = JSON.parse(data);
-    const newContact = { id: Date.String(Date.now()), ...body };
+    const newContact = { ...body, id: String(Date.now()) };
     contacts.push(newContact);
 
     console.table(contacts);
