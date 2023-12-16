@@ -9,37 +9,23 @@ const app = express();
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
-const { corsOptions } = require("./cors.js");
 // cors
-app.use(cors(corsOptions));
-app.use(morgan("tiny"));
+app.use(morgan(formatsLogger));
+
+app.use(cors());
+
 app.use(express.json());
 
-app.use("/api", routerApi);
+app.use("/api/contacts", routerApi);
 
-app.use((_, res, __) => {
-  res.status(404).json({
-    status: "error",
-    code: 404,
-    message: "The requested route is not available",
-    data: "Not found",
-  });
+app.use((req, res) => {
+  res.status(404).json({ message: "Not found" });
 });
 
-app.use((err, _, res, __) => {
-  console.error(err.stack);
-  res.status(500).json({
-    status: "fail",
-    code: 500,
-    message: err.message,
-    data: "Internal Server Error",
-  });
-});
-
-app.listen(PORT, function () {
-  console.log(`Server running. Use our API on port: ${PORT}`);
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: err.message });
 });
 
 module.exports = app;
