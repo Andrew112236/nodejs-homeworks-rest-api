@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const { handleMongoose } = require("../helpers/handleMongoose");
+// const { handleMongoose } = require("../helpers/handleMongoose");
 
 const usersSchema = new Schema({
   password: {
@@ -23,7 +23,7 @@ const usersSchema = new Schema({
   },
 });
 
-usersSchema.post("save", handleMongoose);
+// usersSchema.post("save", handleMongoose);
 const Users = model("users", usersSchema);
 
 module.exports = Users;

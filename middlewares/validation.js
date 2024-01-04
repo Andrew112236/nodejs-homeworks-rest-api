@@ -1,43 +1,29 @@
-const passport = require("passport");
-const passportJWT = require("passport-jwt");
+const jwt = require("jsonwebtoken");
+const { HttpError } = require("../helpers/httpErrorHandler");
 const { Users } = require("../models/users");
-require("dotenv").config();
-const secret = process.env.SECRET;
+const { SECRET_KEY } = process.env;
 
-const ExtractJWT = passportJWT.ExtractJwt;
-const Strategy = passportJWT.Strategy;
-const params = {
-  secretOrKey: secret,
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-};
-
-// JWT Strategy
-passport.use(
-  new Strategy(params, function (payload, done) {
-    Users.find({ _id: payload.id })
-      .then(([user]) => {
-        if (!user) {
-          return done(new Error("User not found"));
-        }
-        return done(null, user);
-      })
-      .catch((err) => done(err));
-  })
-);
-
-const validation = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (err, user) => {
-    if (!user || err) {
-      return res.status(401).json({
-        status: "error",
-        code: 401,
-        message: "Unauthorized",
-        data: "Unauthorized",
-      });
+const validation = async (req, res, next) => {
+  try {
+    const { authorization = "" } = req.headers;
+    const [bearer = "", token = ""] = authorization.split(" ");
+    if (bearer !== "Bearer" || !token) {
+      next(HttpError(401));
     }
-    req.user = user;
-    next();
-  })(req, res, next);
+    try {
+      const { id } = jwt.verify(token, SECRET_KEY);
+      const user = await Users.findById(id);
+      if (!user || !user.token || user.token !== token) {
+        next(HttpError(401));
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      throw HttpError(401, error.message);
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = validation;
