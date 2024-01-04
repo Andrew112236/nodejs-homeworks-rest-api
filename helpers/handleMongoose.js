@@ -1,8 +1,11 @@
-const handleMongoose = (error, data, next) => {
-  const { name, code } = error;
-  error.status = name === "MongoServerError" && code === 11000 ? 409 : 400;
+const handleMongoose = function (error, doc, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    error.status = 409;
+  } else {
+    error.status = 400;
+  }
 
-  next();
+  next(error);
 };
 
 module.exports = handleMongoose;
