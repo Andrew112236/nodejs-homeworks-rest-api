@@ -1,6 +1,7 @@
 const app = require("./app");
 const mongoose = require("mongoose");
 require("dotenv").config();
+require("colors");
 
 mongoose.set("strictQuery", true);
 
