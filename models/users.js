@@ -1,8 +1,7 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-// const { handleMongoose } = require("../helpers/handleMongoose");
-
-const usersSchema = new Schema({
+const usersSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is required"],
@@ -12,18 +11,37 @@ const usersSchema = new Schema({
     required: [true, "Email is required"],
     unique: true,
   },
-  subscription: {
-    type: String,
-    enum: ["starter", "pro", "business"],
-    default: "starter",
-  },
   token: {
     type: String,
     default: null,
   },
 });
 
-// usersSchema.post("save", handleMongoose);
-const Users = model("users", usersSchema);
+usersSchema.pre("save", async function (next) {
+  try {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+usersSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    } else {
+      throw new Error("Incorrect password");
+    }
+  } else {
+    throw new Error("Incorrect email");
+  }
+};
+
+const Users = mongoose.model("users", usersSchema);
 
 module.exports = Users;

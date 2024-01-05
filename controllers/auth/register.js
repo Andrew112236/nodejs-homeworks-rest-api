@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
-const { HttpError } = require("../../helpers");
-const { Users } = require("../../models/user");
+const jwt = require("jsonwebtoken");
+const { SECRET } = process.env;
+const { createSuccessResponse } = require("../../helpers/handleErrors");
+const { Users } = require("../../models/users");
 
 const register = async (req, res) => {
   try {
@@ -8,21 +10,20 @@ const register = async (req, res) => {
 
     const existingUser = await Users.findOne({ email }).exec();
     if (existingUser) {
-      throw HttpError(409, "Email in use");
+      throw new Error("User with this email already exists");
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await Users.create({ email, password: hashPassword });
-
-    res.status(201).json({
-      user: {
-        email: newUser.email,
-      },
+    const hashedPassword = await bcrypt.hash(password, 25);
+    const token = jwt.sign({ id: existingUser._id }, SECRET, {
+      expiresIn: "1h",
     });
+
+    const newUser = await Users.create({ email, password: hashedPassword });
+    const response = createSuccessResponse(newUser, token);
+    res.status(201).json(response);
   } catch (error) {
-    res.status(error.statusCode || 500).json({
-      code: error.statusCode || 500,
+    res.status(500).json({
+      code: 500,
       message: error.message || "Internal Server Error",
     });
   }

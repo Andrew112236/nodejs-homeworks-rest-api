@@ -1,58 +1,27 @@
 const express = require("express");
-
+const router = express.Router();
 const controller = require("../../controllers/contacts");
 
-const { controllerWrapper } = require("../../helpers/controllerWrapper");
+const { customAuthMiddleware } = require("../../middlewares/authToken");
 
-const { validateIdParam } = require("../../middlewares/isValid");
-const { validation } = require("../../middlewares/validation");
-const { verificationBody } = require("../../middlewares/bodyVerification");
+router.get("/", customAuthMiddleware, controller.listContacts);
 
-const {
-  addContactAuthorization,
-  updateContactAuthorization,
-  putContactAuthorization,
-} = require("../../schema/authorization");
+router.post("/", customAuthMiddleware, controller.addContact);
 
-const router = express.Router();
-
-router.get("/", validation, controllerWrapper(controller.listContacts));
-
-router.post(
-  "/",
-  validation,
-  verificationBody(addContactAuthorization, "missing required fields"),
-  controllerWrapper(controller.addContact)
-);
-
-router.get(
-  "/:contactId",
-  validation,
-  validateIdParam,
-  controllerWrapper(controller.getContactById)
-);
-
-router.put(
-  "/:contactId",
-  validation,
-  validateIdParam,
-  verificationBody(putContactAuthorization),
-  controllerWrapper(controller.updateContactById)
-);
+router.get("/:contactId", customAuthMiddleware, controller.getContactById);
 
 router.delete(
   "/:contactId",
-  validation,
-  validateIdParam,
-  controllerWrapper(controller.removeContactById)
+  customAuthMiddleware,
+  controller.removeContactById
 );
+
+router.put("/:contactId", customAuthMiddleware, controller.updateContactById);
 
 router.patch(
   "/:contactId/favorite",
-  validation,
-  validateIdParam,
-  verificationBody(updateContactAuthorization),
-  controllerWrapper(controller.updateFavorite)
+  customAuthMiddleware,
+  controller.updateFavorite
 );
 
 module.exports = router;

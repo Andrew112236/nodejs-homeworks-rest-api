@@ -2,9 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-
-const routerApi = require("./routes/api/index.js");
 const authRouter = require("./routes/api/auth.js");
+const routerApi = require("./routes/api/index.js");
 
 const app = express();
 
