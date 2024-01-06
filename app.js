@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const authRouter = require("./routes/api/auth.js");
 const routerApi = require("./routes/api/index.js");
+const passport = require("passport");
 
 const app = express();
 
@@ -15,7 +16,7 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(morgan(formatsLogger));
 
 app.use(cors());
-
+app.use(passport.initialize());
 app.use(express.json());
 
 app.use("/api/users", authRouter);

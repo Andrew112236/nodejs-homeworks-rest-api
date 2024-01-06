@@ -1,4 +1,5 @@
 const passport = require("passport");
+require("./passportConfiguration.js");
 
 const customAuthMiddleware = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {

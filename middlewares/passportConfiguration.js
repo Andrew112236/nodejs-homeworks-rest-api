@@ -1,6 +1,6 @@
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
-const Users = require("../schema/users");
+const Users = require("../models/users");
 
 require("dotenv").config();
 const secret = process.env.SECRET;
@@ -30,3 +30,4 @@ const verifyUser = async (payload, done) => {
 
 // JWT Strategy
 passport.use(new Strategy(jwtOptions, verifyUser));
+console.log("JWT strategy initialized");
