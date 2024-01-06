@@ -30,5 +30,3 @@ const verifyUser = async (payload, done) => {
 
 // JWT Strategy
 passport.use(new Strategy(jwtOptions, verifyUser));
-
-module.exports = passport;

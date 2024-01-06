@@ -1,16 +1,16 @@
 const passport = require("passport");
 
 const customAuthMiddleware = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (error, user) => {
-    if (error || !user) {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (!user || err) {
       return res.status(401).json({
         status: "error",
         code: 401,
-        message: "Access Denied",
+        message: "Unauthorized",
         data: "Unauthorized",
       });
     }
-    req.authenticatedUser = user;
+    req.user = user;
     next();
   })(req, res, next);
 };
