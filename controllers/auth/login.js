@@ -1,7 +1,6 @@
-const jwt = require("passport-jwt");
-const { SECRET } = process.env;
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { Users } = require("../../models/users");
+const Users = require("../../models/users");
 const {
   createSuccessResponse,
   handleLoginErrors,
@@ -24,7 +23,7 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const token = jwt.sign(payload, SECRET, { expiresIn: "1h" });
+  const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "1h" });
 
   await Users.findByIdAndUpdate(user._id, { token });
   const response = createSuccessResponse(user, token);
