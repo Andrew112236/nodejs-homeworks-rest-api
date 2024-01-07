@@ -1,17 +1,17 @@
 const Contacts = require("../models/contacts");
 
-// listContacts
+// listContacts - GOOD
 
 const listContacts = async (_, res) => {
   const contact = await Contacts.find();
   res.json(contact);
 };
 
-// addContact
+// addContact - GOOD
 
 const addContact = async (req, res) => {
-  const newContact = new Contacts(req.body);
-  const result = await newContact.save();
+  const { _id: owner } = req.user;
+  const result = await Contacts.create({ ...req.body, owner });
   res.status(201).json({
     status: "success",
     code: 201,
@@ -19,7 +19,7 @@ const addContact = async (req, res) => {
   });
 };
 
-// getContactById
+// getContactById - GOOD
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
@@ -35,7 +35,7 @@ const getContactById = async (req, res) => {
   res.status(200).json(getContact);
 };
 
-// removeContactById
+// removeContactById - GOOD
 
 const removeContactById = async (req, res) => {
   const { contactId } = req.params;
@@ -51,7 +51,7 @@ const removeContactById = async (req, res) => {
   res.status(200).json({ mesage: "Contactul a fost sters!" });
 };
 
-// update ContactById
+// update ContactById - GOOD
 
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
@@ -74,7 +74,7 @@ const updateContactById = async (req, res) => {
   res.json(updateContact);
 };
 
-// update Status Favorite Contact
+// update Status Favorite Contact - GOOD
 
 const updateFavorite = (req, res) => {
   const { contactId } = req.params;

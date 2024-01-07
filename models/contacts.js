@@ -1,6 +1,7 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const phonebookSchema = new Schema(
+const phonebookSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -19,10 +20,15 @@ const phonebookSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
-const contacts = model("contact", phonebookSchema);
+const contacts = mongoose.model("contact", phonebookSchema);
 
 module.exports = contacts;

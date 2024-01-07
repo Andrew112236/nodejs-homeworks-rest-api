@@ -1,49 +1,27 @@
 const express = require("express");
-
+const router = express.Router();
 const controller = require("../../controllers/contacts");
 
-const {
-  addContactAuthorization,
-  putContactAuthorization,
-  updateContactAuthorization,
-} = require("../../schema/authorization");
+const { customAuthMiddleware } = require("../../middlewares/authToken");
 
-const { controlWrapper, validateIdParam } = require("../../helpers");
+router.get("/", customAuthMiddleware, controller.listContacts);
 
-const router = express.Router();
+router.post("/", customAuthMiddleware, controller.addContact);
 
-router.get("/", controlWrapper(controller.listContacts));
-
-router.post(
-  "/",
-  addContactAuthorization,
-  controlWrapper(controller.addContact)
-);
-
-router.get(
-  "/:contactId",
-  validateIdParam,
-  controlWrapper(controller.getContactById)
-);
-
-router.put(
-  "/:contactId",
-  putContactAuthorization,
-  validateIdParam,
-  controlWrapper(controller.updateContactById)
-);
+router.get("/:contactId", customAuthMiddleware, controller.getContactById);
 
 router.delete(
   "/:contactId",
-  validateIdParam,
-  controlWrapper(controller.removeContactById)
+  customAuthMiddleware,
+  controller.removeContactById
 );
+
+router.put("/:contactId", customAuthMiddleware, controller.updateContactById);
 
 router.patch(
   "/:contactId/favorite",
-  updateContactAuthorization,
-  validateIdParam,
-  controlWrapper(controller.updateFavorite)
+  customAuthMiddleware,
+  controller.updateFavorite
 );
 
 module.exports = router;
