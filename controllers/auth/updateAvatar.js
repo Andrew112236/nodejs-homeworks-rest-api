@@ -19,7 +19,7 @@ const updateAvatar = async (req, res, next) => {
 
     const destinationPath = path.join(
       __dirname,
-      `../public/avatars/${uniqFilename}`
+      `../../public/avatars/${uniqFilename}`
     ); // Se definește calea de destinație pentru fișierul final de avatar.
 
     // Utilizează Jimp pentru redimensionare, ajustarea calității și transformare în tonuri de gri
