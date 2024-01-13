@@ -34,6 +34,8 @@ router.get("/logout", customAuthMiddleware, authController.logout);
 
 router.get("/current", customAuthMiddleware, authController.currentValidation);
 
+router.get("/verify/:verificationToken", authController.verifyEmailController);
+
 router.patch(
   "/avatars",
   customAuthMiddleware,

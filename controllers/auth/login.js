@@ -15,6 +15,10 @@ const login = async (req, res) => {
       throw handleLoginErrors();
     }
 
+    if (!user.verify) {
+      throw new Error("You must verify your account!");
+    }
+
     const passCompare = await bcrypt.compare(password, user.password);
     if (!passCompare) {
       throw handleLoginErrors();
