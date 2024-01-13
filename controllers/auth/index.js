@@ -10,6 +10,8 @@ const updateAvatar = require("./updateAvatar");
 
 const verifyEmailController = require("./verifyEmailController");
 
+const resendEmailVerification = require("./resendEmailVerification");
+
 module.exports = {
   register,
   login,
@@ -18,4 +20,5 @@ module.exports = {
   updateAvatar,
   verifyEmailController,
   verifyEmail,
+  resendEmailVerification,
 };

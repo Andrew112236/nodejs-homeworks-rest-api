@@ -36,6 +36,8 @@ router.get("/current", customAuthMiddleware, authController.currentValidation);
 
 router.get("/verify/:verificationToken", authController.verifyEmailController);
 
+router.post("/verify", authController.resendEmailVerification);
+
 router.patch(
   "/avatars",
   customAuthMiddleware,

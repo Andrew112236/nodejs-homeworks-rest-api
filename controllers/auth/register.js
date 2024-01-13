@@ -22,7 +22,7 @@ const register = async (req, res) => {
       to: email,
       from: "andrew83442@outlook.com",
       subject: "Email de Verificare Cont",
-      text: `Codul de verificare este ${uniqueCodeVerification} / http://localhost:3000/api/users/verify/${uniqueCodeVerification}`,
+      html: `<a href="https:localhost:3001/api/users/verify/${uniqueCodeVerification}">Confirm`,
     };
 
     sgMail
@@ -69,11 +69,8 @@ const verifyEmail = async (verificationToken) => {
   if (!result) throw new Error("userul nu exista");
 };
 
-console.log("Tipul lui register:", Object.prototype.toString.call(register));
-console.log(
-  "Tipul lui verifyEmail:",
-  Object.prototype.toString.call(verifyEmail)
-);
+console.log("Register type:", Object.prototype.toString.call(register));
+console.log("VerifyEmail type:", Object.prototype.toString.call(verifyEmail));
 
 console.log(typeof register);
 console.log(typeof verifyEmail);
