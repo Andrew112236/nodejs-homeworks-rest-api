@@ -34,6 +34,8 @@ router.get("/logout", customAuthMiddleware, authController.logout);
 
 router.get("/current", customAuthMiddleware, authController.currentValidation);
 
+// Verify SEction
+
 router.get("/verify/:verificationToken", authController.verifyEmailController);
 
 router.post("/verify", authController.resendEmailVerification);
