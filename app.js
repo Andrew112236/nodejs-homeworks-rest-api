@@ -6,6 +6,7 @@ const authRouter = require("./routes/api/auth.js");
 const routerApi = require("./routes/api/index.js");
 const passport = require("passport");
 const path = require("path");
+const sgMail = require("@sendgrid/mail");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.use("/api/users", authRouter);
 app.use("/api/contacts", routerApi);

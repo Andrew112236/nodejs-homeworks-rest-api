@@ -20,6 +20,14 @@ const usersSchema = new mongoose.Schema({
     type: String,
     minLength: 2,
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: Object,
+    required: [true, "Verify token is required"],
+  },
 });
 
 usersSchema.pre("save", async function (next) {
@@ -44,6 +52,22 @@ usersSchema.statics.login = async function (email, password) {
     }
   } else {
     throw new Error("Incorrect email");
+  }
+};
+
+usersSchema.statics.verifyEmail = async function (verificationToken) {
+  try {
+    const user = await this.findOne({ verificationToken });
+    if (!user) {
+      throw new Error("User not found for this verification code");
+    }
+
+    user.verificationToken = null;
+    await user.save();
+
+    return user.toJSON;
+  } catch (error) {
+    throw new Error("Error in email validation: " + error.message);
   }
 };
 
